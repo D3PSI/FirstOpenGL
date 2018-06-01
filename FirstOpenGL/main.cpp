@@ -60,21 +60,6 @@ int main()
 		return -1;
 	}
 
-	// render loop
-	while (!glfwWindowShouldClose(window))
-	{
-		// input
-		processInput(window);
-
-		// render
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
-
 	unsigned int VBO;
 
 	glGenBuffers(1, &VBO);
@@ -125,6 +110,45 @@ int main()
 	if (!successShaderProgram) {
 		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLogShaderProgram);
 		std::cerr << "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n" << infoLogShaderProgram << std::endl;
+	}
+
+	// delete shader objects once we've linked them to the program
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// create the VAO which is going to be stored in our VBO
+	unsigned int VAO;
+	glGenVertexArrays(1, &VAO);
+
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// render loop
+	while (!glfwWindowShouldClose(window))
+	{
+		// input
+		processInput(window);
+
+		// render
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// use the newly created shader program
+		glUseProgram(shaderProgram);
+
+		// draw our first triangle
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		glfwSwapBuffers(window);
+		glfwPollEvents();
 	}
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
