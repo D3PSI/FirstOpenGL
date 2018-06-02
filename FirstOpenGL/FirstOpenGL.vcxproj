@@ -128,15 +128,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="prototypes.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="FirstOpenGL.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shader.fs" />
-    <None Include="shader.vs" />
+    <None Include="shaders\shader.fs" />
+    <None Include="shaders\shader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

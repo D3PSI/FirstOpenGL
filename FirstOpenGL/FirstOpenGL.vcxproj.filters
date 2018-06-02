@@ -29,20 +29,15 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="FirstOpenGL.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shader.vs">
+    <None Include="shaders\shader.fs">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="shader.fs">
+    <None Include="shaders\shader.vs">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
