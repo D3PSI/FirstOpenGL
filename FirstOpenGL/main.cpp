@@ -19,28 +19,35 @@ const unsigned int SCR_HEIGHT = 600;
 
 const float FOV = 45.0f;
 
+float deltaTime = 0.0f;	// Time between current frame and last frame
+float lastFrame = 0.0f; // Time of last frame
+
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
 // render a simple rectangle with assigned colors and texture coordinates on vertices
 float vertices[] = {
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 	0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
 	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 	0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
 	0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
 	0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+   -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+   -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+   -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+   -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
 	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -49,19 +56,19 @@ float vertices[] = {
 	0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 	0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
 	0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
 	0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
 	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+   -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
 
 glm::vec3 cubePositions[] = {
@@ -232,8 +239,11 @@ int main()
 		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 
 		// create view matrix
+		float radius = 10.0f;
+		float camX = sin((float)glfwGetTime()) * radius;
+		float camZ = cos((float)glfwGetTime()) * radius;
 		glm::mat4 view;
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 		// create projection matrix
 		glm::mat4 projection;
@@ -241,6 +251,17 @@ int main()
 
 		ourShader.setMat4("projection", projection);
 		ourShader.setMat4("view", view);
+
+		// camera
+		glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+
+		glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+
+		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+
+		glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
 
 		// render container
 		glBindVertexArray(VAO);
@@ -266,10 +287,27 @@ int main()
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-void processInput(GLFWwindow *window)
-{
+void processInput(GLFWwindow *window){
+	float currentFrame = (float)glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+
+	float cameraSpeed = 2.5f * deltaTime; // adjust accordingly
+
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		cameraPos += cameraSpeed * cameraFront;
+
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		cameraPos -= cameraSpeed * cameraFront;
+
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
