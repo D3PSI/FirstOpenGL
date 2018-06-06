@@ -164,6 +164,9 @@ int main()
 		float currentFrame = (float)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+		float fps = 1 / deltaTime;
+
+		std::cout << "FPS:	" << fps << std::endl;
 
 		// input
 		processInput(window);
