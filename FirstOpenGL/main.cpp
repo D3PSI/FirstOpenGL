@@ -174,6 +174,10 @@ int main()
 		// clear buffers each iteration
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// change light's position over time
+		lightPos.x = 1.0f + sin((float)glfwGetTime()) * 2.0f;
+		lightPos.y = sin((float)glfwGetTime() / 2.0f) * 1.0f;
+
 		lightingShader.use();
 		lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
 		lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
