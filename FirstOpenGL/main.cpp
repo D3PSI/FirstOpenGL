@@ -164,9 +164,10 @@ int main()
 		float currentFrame = (float)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		float fps = 1 / deltaTime;
 
-		std::cout << "FPS:	" << fps << std::endl;
+		// print FPS
+		//float fps = 1 / deltaTime;
+		//std::cout << "FPS:	" << fps << std::endl;
 
 		// input
 		processInput(window);
@@ -182,9 +183,18 @@ int main()
 		lightPos.y = sin((float)glfwGetTime() / 2.0f) * 1.0f;
 
 		lightingShader.use();
-		lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-		lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+
+		lightingShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+		lightingShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+		lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+		lightingShader.setFloat("material.shininess", 32.0f);
+
+		lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+		lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);	// darken the light a bit to fit the scene
+		lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
 		lightingShader.setVec3("lightPos", lightPos);
+
 		lightingShader.setVec3("viewPos", camera.Position);
 
 		// create view matrix
