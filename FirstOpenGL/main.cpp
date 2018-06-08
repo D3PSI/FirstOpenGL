@@ -166,8 +166,8 @@ int main()
 		lastFrame = currentFrame;
 
 		// print FPS
-		//float fps = 1 / deltaTime;
-		//std::cout << "FPS:	" << fps << std::endl;
+		float fps = 1 / deltaTime;
+		std::cout << "FPS:	" << fps << std::endl;
 
 		// input
 		processInput(window);
