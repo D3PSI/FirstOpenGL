@@ -52,16 +52,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\lamp.fs">
+    <None Include="shaders\shader.fs">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="shaders\lamp.vs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="shaders\lighting.fs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="shaders\lighting.vs">
+    <None Include="shaders\shader.vs">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

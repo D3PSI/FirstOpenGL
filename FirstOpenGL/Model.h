@@ -5,7 +5,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <stb_image.h>
+#include <stbimage/stb_image.h>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -20,22 +21,24 @@
 #include <map>
 #include <vector>
 
+using namespace std;
+
+unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false);
+
 class Model
 {
 public:
 	/*  Functions   */
-	Model(char *path)
-	{
-		loadModel(path);
-	}
+	Model(string const &path);
 	void Draw(Shader shader);
 private:
 	/*  Model Data  */
+	vector<Texture> textures_loaded;
 	vector<Mesh> meshes;
 	string directory;
 
 	/*  Functions   */
-	void loadModel(string path);
+	void loadModel(string const &path);
 	void processNode(aiNode *node, const aiScene *scene);
 	Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 	vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
