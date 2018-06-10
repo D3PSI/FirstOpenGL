@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <stb_image.h>
+#include <stbimage/stb_image.h>
 
 #include "prototypes.h"
 #include "Shader.h"
@@ -297,8 +297,7 @@ int main()
 
 		// render all cubes
 		glBindVertexArray(cubeVAO);
-		for (unsigned int i = 0; i < 10; i++)
-		{
+		for (unsigned int i = 0; i < 10; i++) {
 			// calculate the model matrix for each object and pass it to shader before drawing
 			glm::mat4 model;
 			model = glm::translate(model, cubePositions[i]);
@@ -316,8 +315,7 @@ int main()
 
 		// we now draw as many light bulbs as we have point lights.
 		glBindVertexArray(lightVAO);
-		for (unsigned int i = 0; i < 4; i++)
-		{
+		for (unsigned int i = 0; i < 4; i++) {
 			model = glm::mat4();
 			model = glm::translate(model, pointLightPositions[i]);
 			model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
@@ -341,7 +339,7 @@ int main()
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-void processInput(GLFWwindow *window){
+void processInput(GLFWwindow *window) {
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) ==  GLFW_PRESS)
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	else if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE)
@@ -364,8 +362,7 @@ void processInput(GLFWwindow *window){
 }
 
 void mouse_callback(GLFWwindow * window, double xpos, double ypos){
-	if (firstMouse)
-	{
+	if (firstMouse) {
 		lastX = (float)xpos;
 		lastY = (float)ypos;
 		firstMouse = false;
@@ -380,28 +377,25 @@ void mouse_callback(GLFWwindow * window, double xpos, double ypos){
 	camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
-void scroll_callback(GLFWwindow * window, double xoffset, double yoffset){
+void scroll_callback(GLFWwindow * window, double xoffset, double yoffset) {
 	camera.ProcessMouseScroll((float)yoffset);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
 }
 
 // utility function for loading a texture
-unsigned int loadTexture(char const * path)
-{
+unsigned int loadTexture(char const * path) {
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
 	unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
-	if (data)
-	{
+	if (data) {
 		GLenum format;
 		if (nrComponents == 1)
 			format = GL_RED;
@@ -421,8 +415,7 @@ unsigned int loadTexture(char const * path)
 
 		stbi_image_free(data);
 	}
-	else
-	{
+	else {
 		std::cout << "Texture failed to load at path: " << path << std::endl;
 		stbi_image_free(data);
 	}
