@@ -11,12 +11,12 @@ void Model::Draw(Shader shader)
 }
 
 void Model::loadModel(string const &path) {
-	Assimp::Importer importer;
-	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	Assimp::Importer import;
+	const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	// check for loading errors
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-		cerr << "ERROR::ASSIMP::" << importer.GetErrorString() << endl;
+		cerr << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
 		return;
 	}
 
