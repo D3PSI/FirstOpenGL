@@ -75,6 +75,8 @@ int main()
 	Shader ourShader("shaders/shader.vs", "shaders/shader.fs");
 	Model ourModel("resources/models/nanosuit/nanosuit.obj");
 
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	// RENDER-LOOP
 	// -----------
 	// -----------
@@ -82,7 +84,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		// per-frame time logic
-		float currentFrame = glfwGetTime();
+		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
@@ -97,7 +99,7 @@ int main()
 		ourShader.use();
 
 		// view/projection transformations
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 		ourShader.setMat4("projection", projection);
 		ourShader.setMat4("view", view);
@@ -144,22 +146,22 @@ void processInput(GLFWwindow *window) {
 
 void mouse_callback(GLFWwindow * window, double xpos, double ypos){
 	if (firstMouse) {
-		lastX = (float)xpos;
-		lastY = (float)ypos;
+		lastX = static_cast<float>(xpos);
+		lastY = static_cast<float>(ypos);
 		firstMouse = false;
 	}
 
-	float xoffset = (float)xpos - lastX;
-	float yoffset = lastY - (float)ypos; // reversed since y-coordinates go from bottom to top
+	float xoffset = static_cast<float>(xpos) - lastX;
+	float yoffset = lastY - static_cast<float>(ypos); // reversed since y-coordinates go from bottom to top
 
-	lastX = (float)xpos;
-	lastY = (float)ypos;
+	lastX = static_cast<float>(xpos);
+	lastY = static_cast<float>(ypos);
 
 	camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow * window, double xoffset, double yoffset) {
-	camera.ProcessMouseScroll((float)yoffset);
+	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
