@@ -1,4 +1,5 @@
 #include "Model.h"
+#include <stbimage/stb_image.h>
 
 Model::Model(string const &path) {
 	loadModel(path);

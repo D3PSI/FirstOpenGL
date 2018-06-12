@@ -5,7 +5,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <stbimage/stb_image.h>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
