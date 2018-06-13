@@ -41,6 +41,10 @@ void Model::processNode(aiNode *node, const aiScene *scene) {
 
 }
 
+Model::Model(string const &path, bool gamma) : gammaCorrection(gamma) {
+	loadModel(path);
+}
+
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 	// data to fill
 	vector<Vertex> vertices;
