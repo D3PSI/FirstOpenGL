@@ -30,6 +30,9 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+// lighting
+glm::vec3 lightPos(0.7f, 0.2f, 2.0f);
+
 int main()
 {
 	// glfw: initialize and configure
@@ -95,8 +98,25 @@ int main()
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// don't forget to enable shader before setting uniforms
+		// be sure to activate shader when setting uniforms/drawing objects
 		ourShader.use();
+		ourShader.setVec3("viewPos", camera.Position);
+
+		glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+
+		//ourShader.setVec3("light.position", lightPos);
+		ourShader.setVec3("light.direction", lightPos);
+
+		ourShader.setVec3("light.ambient", ambientColor);
+		ourShader.setVec3("light.diffuse", diffuseColor);
+		ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+		ourShader.setFloat("material.shininess", 32.0f);
+
+		ourShader.setFloat("light.constant", 1.0f);
+		ourShader.setFloat("light.linear", 1.0f);
+		ourShader.setFloat("light.quadratic", 1.0f);
 
 		// view/projection transformations
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
