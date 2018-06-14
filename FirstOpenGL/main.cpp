@@ -31,7 +31,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 lightPos(0.7f, 0.2f, 2.0f);
+glm::vec3 lightPos(-0.7f, -0.2f, -2.0f);
 
 int main()
 {
