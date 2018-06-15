@@ -31,10 +31,9 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 lightPos(-0.7f, -0.2f, -2.0f);
+glm::vec3 lightPos(0.7f, 0.2f, 2.0f);
 
-int main()
-{
+int main() {
 	// glfw: initialize and configure
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -47,12 +46,13 @@ int main()
 
 	// glfw window creation
 	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "OpenGL", NULL, NULL);
-	if (window == NULL)
-	{
+
+	if (window == NULL) {
 		std::cerr << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
+
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -66,8 +66,7 @@ int main()
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// glad: load all OpenGL function pointers
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cerr << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
@@ -84,8 +83,7 @@ int main()
 	// -----------
 	// -----------
 	// -----------
-	while (!glfwWindowShouldClose(window))
-	{
+	while (!glfwWindowShouldClose(window)) {
 		// per-frame time logic
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
@@ -107,7 +105,7 @@ int main()
 		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
 
 		//ourShader.setVec3("light.position", lightPos);
-		ourShader.setVec3("light.direction", lightPos);
+		ourShader.setVec3("light.position", lightPos);
 
 		ourShader.setVec3("light.ambient", ambientColor);
 		ourShader.setVec3("light.diffuse", diffuseColor);
@@ -164,7 +162,7 @@ void processInput(GLFWwindow *window) {
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
-void mouse_callback(GLFWwindow * window, double xpos, double ypos){
+void mouse_callback(GLFWwindow * window, double xpos, double ypos) {
 	if (firstMouse) {
 		lastX = static_cast<float>(xpos);
 		lastY = static_cast<float>(ypos);
