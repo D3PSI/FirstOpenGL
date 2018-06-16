@@ -163,6 +163,11 @@ int main() {
 	shader.use();
 	shader.setInt("texture1", 0);
 
+	// enable depth testing
+	glEnable(GL_DEPTH_TEST);
+
+	// set depth testing mode
+	glDepthFunc(GL_LESS);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -190,6 +195,7 @@ int main() {
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		shader.setMat4("view", view);
 		shader.setMat4("projection", projection);
+
 		// cubes
 		glBindVertexArray(cubeVAO);
 		glActiveTexture(GL_TEXTURE0);
@@ -201,6 +207,7 @@ int main() {
 		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
 		shader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+
 		// floor
 		glBindVertexArray(planeVAO);
 		glBindTexture(GL_TEXTURE_2D, floorTexture);
