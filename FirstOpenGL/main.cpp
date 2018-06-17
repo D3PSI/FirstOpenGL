@@ -205,14 +205,14 @@ int main() {
 
 	unsigned int cubemapTexture = loadCubemap(faces);
 
-	Shader shader("shaders/shader.vs", "shaders/shader.fs"); 
+	Shader ourShader("shaders/shader.vs", "shaders/shader.fs"); 
 	Shader skyboxShader("shaders/skybox.vs", "shaders/skybox.fs");
 
-	Model model("resources/models/nanosuit/nanosuit.obj");
+	Model ourModel("resources/models/nanosuit/nanosuit.obj");
 
 	// shader configuration
-	shader.use();
-	shader.setInt("texture1", 0);
+	ourShader.use();
+	ourShader.setInt("texture1", 0);
 
 	skyboxShader.use();
 	skyboxShader.setInt("skybox", 0);
@@ -240,15 +240,44 @@ int main() {
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// draw scene as normal
-		shader.use();
-		glm::mat4 model;
+		ourShader.use();
+		ourShader.setVec3("viewPos", camera.Position);
+
+		glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+
+		//ourShader.setVec3("light.position", lightPos);
+		ourShader.setVec3("light.position", lightPos);
+
+		ourShader.setVec3("light.ambient", ambientColor);
+		ourShader.setVec3("light.diffuse", diffuseColor);
+		ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+		ourShader.setFloat("material.shininess", 32.0f);
+
+		ourShader.setFloat("light.constant", 1.0f);
+		ourShader.setFloat("light.linear", 1.0f);
+		ourShader.setFloat("light.quadratic", 1.0f);
+
+		// view/projection transformations
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		shader.setMat4("model", model);
-		shader.setMat4("view", view);
-		shader.setMat4("projection", projection);
-		shader.setVec3("cameraPos", camera.Position);
+		ourShader.setMat4("projection", projection);
+		ourShader.setMat4("view", view);
+
+		// render the loaded model
+		glm::mat4 model;
+		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+		ourShader.setMat4("model", model);
+		ourModel.Draw(ourShader);
+
+		// draw scene as normal
+		ourShader.use();
+		ourShader.setMat4("model", model);
+		ourShader.setMat4("view", view);
+		ourShader.setMat4("projection", projection);
+		ourShader.setVec3("cameraPos", camera.Position);
 
 		// cubes
 		glBindVertexArray(cubeVAO);
