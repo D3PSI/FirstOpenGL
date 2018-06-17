@@ -183,7 +183,7 @@ int main() {
 	unsigned int transparentTexture = loadTexture("resources/textures/blending_transparent_window.png");
 
 	// transparent vegetation locations
-	vector<glm::vec3> vegetation {
+	vector<glm::vec3> windows {
 		glm::vec3(-1.5f, 0.0f, -0.48f),
 		glm::vec3(1.5f, 0.0f, 0.51f),
 		glm::vec3(0.0f, 0.0f, 0.7f),
@@ -223,6 +223,13 @@ int main() {
 
 		// input
 		processInput(window);
+		
+		// sort objects to be drawn by distance from camera
+		std::map<float, glm::vec3> sorted;
+		for (unsigned int i = 0; i < windows.size(); i++) {
+			float distance = glm::length(camera.Position - windows[i]);
+			sorted[distance] = windows[i];
+		}
 
 		// render
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
@@ -255,13 +262,12 @@ int main() {
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 
-		// vegetation
+		// windows (from furthest to nearest)
 		glBindVertexArray(transparentVAO);
 		glBindTexture(GL_TEXTURE_2D, transparentTexture);
-		for (GLuint i = 0; i < vegetation.size(); i++)
-		{
+		for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
 			model = glm::mat4();
-			model = glm::translate(model, vegetation[i]);
+			model = glm::translate(model, it->second);
 			shader.setMat4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
