@@ -318,6 +318,7 @@ int main() {
 	// set face culling mode
 	glCullFace(GL_BACK);
 
+	// wireframe mode (uncomment, but you wont be able to see anything because its's all being drawn to a simple texture in our personal framebuffer object)
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// RENDER-LOOP
