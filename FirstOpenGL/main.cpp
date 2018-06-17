@@ -80,53 +80,48 @@ int main() {
 	*/
 
 	float cubeVertices[] = {
-		// Back face 
-	   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // Bottom-left 
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right 
-		0.5f, -0.5f, -0.5f,  1.0f, 0.0f, // bottom-right          
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right 
-	   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // bottom-left 
-	   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left 
+		// positions          // normals
+	   -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	   -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	   -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-		// Front face 
-	   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left 
-	    0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-right 
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right 
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right 
-	   -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, // top-left 
-	   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left 
+	   -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	   -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	   -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
 
-		// Left face 
-	   -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right 
-	   -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-left 
-	   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left 
-	   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left 
-	   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right 
-	   -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right
+	   -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+	   -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+	   -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+	   -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+	   -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+	   -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-		// Right face 
-	    0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left 
-		0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right 
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right          
-		0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right 
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left 
-		0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left 
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-		// Bottom face 
-	   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right 
-		0.5f, -0.5f, -0.5f,  1.0f, 1.0f, // top-left 
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left 
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left 
-	   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right 
-	   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right 
+	   -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+	   -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+	   -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-		// Top face 
-	   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left 
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right 
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right      
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right 
-	   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left 
-	   -0.5f,  0.5f,  0.5f,  0.0f, 0.0f  // bottom-left
+	   -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+	   -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+	   -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 	};
 
 	float skyboxVertices[] = {
@@ -182,10 +177,9 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glBindVertexArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	// skybox VAO
 	unsigned int skyboxVAO, skyboxVBO;
@@ -224,21 +218,6 @@ int main() {
 	// enable depth testing
 	glEnable(GL_DEPTH_TEST);
 
-	// set depth testing mode
-	glDepthFunc(GL_LESS);
-
-	// enable blending (half transparent textures)
-	glEnable(GL_BLEND);
-
-	// set blending mode
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	// enable backface culling
-	glEnable(GL_CULL_FACE);
-
-	// set face culling mode
-	glCullFace(GL_BACK);
-
 	// wireframe mode (uncomment, but you wont be able to see anything because its's all being drawn to a simple texture in our personal framebuffer object)
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -255,34 +234,26 @@ int main() {
 		// input
 		processInput(window);
 
-		// enable backface culling
-			glEnable(GL_CULL_FACE);
-
-		// set face culling mode
-		glCullFace(GL_BACK);
-
 		// render
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// draw scene as normal
 		shader.use();
 		glm::mat4 model;
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		shader.setMat4("model", model);
 		shader.setMat4("view", view);
 		shader.setMat4("projection", projection);
+		shader.setVec3("cameraPos", camera.Position);
 
 		// cubes
 		glBindVertexArray(cubeVAO);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, cubeTexture);
-		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-		shader.setMat4("model", model);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
-		shader.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
 
 		// draw skybox as last
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
