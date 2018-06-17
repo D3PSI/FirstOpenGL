@@ -71,60 +71,76 @@ int main() {
 		return -1;
 	}
 
+	/*
+	Remember: to specify vertices in a counter-clockwise winding order you need to visualize the triangle
+	as if you're in front of the triangle and from that point of view, is where you set their order.
+
+	To define the order of a triangle on the right side of the cube for example, you'd imagine yourself looking
+	straight at the right side of the cube, and then visualize the triangle and make sure their order is specified
+	in a counter-clockwise order. This takes some practice, but try visualizing this yourself and see that this
+	is correct.
+	*/
+
 	float cubeVertices[] = {
-		// positions          // texture Coords
-	   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		// Back face
+	   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // Bottom-left
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
+		0.5f, -0.5f, -0.5f,  1.0f, 0.0f, // bottom-right         
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
+	   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // bottom-left
+	   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
 
-	   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	   -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-	   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+										  // Front face
+	   								     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
+										  0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
+										  0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right
+										  0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right
+									     -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, // top-left
+									     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
 
-	   -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	   -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	   -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+																			// Left face
+																		   -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right
+																		   -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-left
+																		   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left
+																		   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left
+																		   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right
+																		   -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right
 
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+																											  // Right face
+																											  0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left
+																											  0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right
+																											  0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right         
+																											  0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right
+																											  0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left
+																											  0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left   
 
-	   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	   -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+																																			   // Bottom face
+																																			  -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right
+																																			   0.5f, -0.5f, -0.5f,  1.0f, 1.0f, // top-left
+																																			   0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left
+																																			   0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left
+																																			  -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right
+																																			  -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right
 
-	   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	   -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-	   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+																																												 // Top face
+																																											    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
+																																												 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
+																																												 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right     
+																																												 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
+																																											    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
+																																											    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f  // bottom-left        
 	};
 
+	// redefined in other order than before (ccw to cw or the other way around)
 	float planeVertices[] = {
 		// positions          // texture Coords (note we set these higher than 1 (together with GL_REPEAT as texture wrapping mode). this will cause the floor texture to repeat)
 		5.0f, -0.5001f,  5.0f,  2.0f, 0.0f,
-	   -5.0f, -0.5001f,  5.0f,  0.0f, 0.0f,
-	   -5.0f, -0.5001f, -5.0f,  0.0f, 2.0f,
+	   -5.0f, -0.5001f, -5.0f,  0.0f, 0.0f,
+	   -5.0f, -0.5001f,  5.0f,  0.0f, 2.0f,
 
 		5.0f, -0.5001f,  5.0f,  2.0f, 0.0f,
-	   -5.0f, -0.5001f, -5.0f,  0.0f, 2.0f,
-		5.0f, -0.5001f, -5.0f,  2.0f, 2.0f
+	    5.0f, -0.5001f, -5.0f,  0.0f, 2.0f,
+	   -5.0f, -0.5001f, -5.0f,  2.0f, 2.0f
 	};
 
 	float transparentVertices[] = {
@@ -209,6 +225,12 @@ int main() {
 	// set blending mode
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	// enable backface culling
+	glEnable(GL_CULL_FACE);
+
+	// set face culling mode
+	glCullFace(GL_BACK);
+
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// RENDER-LOOP
@@ -262,6 +284,9 @@ int main() {
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 
+		//disable culling before rendering transparent stuff
+		glDisable(GL_CULL_FACE);
+
 		// windows (from furthest to nearest)
 		glBindVertexArray(transparentVAO);
 		glBindTexture(GL_TEXTURE_2D, transparentTexture);
@@ -271,6 +296,10 @@ int main() {
 			shader.setMat4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
+		
+		// enable face culling again and set it's mode
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(window);
