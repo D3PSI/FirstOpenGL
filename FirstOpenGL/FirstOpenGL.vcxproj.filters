@@ -58,5 +58,11 @@
     <None Include="shaders\shader.vs">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="shaders\screenShader.vs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="shaders\screenShader.fs">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
