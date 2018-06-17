@@ -208,6 +208,8 @@ int main() {
 	Shader shader("shaders/shader.vs", "shaders/shader.fs"); 
 	Shader skyboxShader("shaders/skybox.vs", "shaders/skybox.fs");
 
+	Model model("resources/models/nanosuit/nanosuit.obj");
+
 	// shader configuration
 	shader.use();
 	shader.setInt("texture1", 0);
