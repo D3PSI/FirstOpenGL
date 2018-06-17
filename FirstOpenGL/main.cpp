@@ -180,7 +180,7 @@ int main() {
 	// load textures
 	unsigned int cubeTexture = loadTexture("resources/textures/marble.jpg");
 	unsigned int floorTexture = loadTexture("resources/textures/metal.png");
-	unsigned int transparentTexture = loadTexture("resources/textures/grass.png");
+	unsigned int transparentTexture = loadTexture("resources/textures/blending_transparent_window.png");
 
 	// transparent vegetation locations
 	vector<glm::vec3> vegetation {
@@ -202,6 +202,12 @@ int main() {
 
 	// set depth testing mode
 	glDepthFunc(GL_LESS);
+
+	// enable blending (half transparent textures)
+	glEnable(GL_BLEND);
+
+	// set blending mode
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
