@@ -194,7 +194,7 @@ int main() {
 
 	unsigned int cubemapTexture = loadCubemap(faces);
 
-	Shader ourShader("shaders/shader.vs", "shaders/shader.fs"); 
+	Shader ourShader("shaders/shader.vs", "shaders/shader.fs", "shaders/shader.gs"); 
 	Shader skyboxShader("shaders/skybox.vs", "shaders/skybox.fs");
 	Shader screenShader("shaders/screen.vs", "shaders/screen.fs");
 
@@ -275,6 +275,9 @@ int main() {
 		ourShader.setMat4("view", view);
 		ourShader.setMat4("projection", projection);
 		ourShader.setVec3("cameraPos", camera.Position);
+
+		// add time component to geometry shader in the form of a uniform
+		ourShader.setFloat("time", static_cast<float>(glfwGetTime()));
 
 		// draw skybox as last
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content

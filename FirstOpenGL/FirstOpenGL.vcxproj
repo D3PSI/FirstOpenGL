@@ -141,6 +141,7 @@
     <None Include="shaders\screen.fs" />
     <None Include="shaders\screen.vs" />
     <None Include="shaders\shader.fs" />
+    <None Include="shaders\shader.gs" />
     <None Include="shaders\shader.vs" />
     <None Include="shaders\skybox.fs" />
     <None Include="shaders\skybox.vs" />
