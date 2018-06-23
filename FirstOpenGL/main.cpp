@@ -194,7 +194,8 @@ int main() {
 
 	unsigned int cubemapTexture = loadCubemap(faces);
 
-	Shader ourShader("shaders/shader.vs", "shaders/shader.fs", "shaders/shader.gs"); 
+	Shader ourShader("shaders/shader.vs", "shaders/shader.fs");
+	Shader normalShader("shaders/normal.vs", "shaders/normal.fs", "shaders/normal.gs");
 	Shader skyboxShader("shaders/skybox.vs", "shaders/skybox.fs");
 	Shader screenShader("shaders/screen.vs", "shaders/screen.fs");
 
@@ -248,19 +249,15 @@ int main() {
 		// render the loaded model
 		glm::mat4 model;
 		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 		ourShader.setMat4("model", model);
 		ourModel.Draw(ourShader);
 
-		// draw scene as normal
-		ourShader.use();
-		ourShader.setMat4("model", model);
-		ourShader.setMat4("view", view);
-		ourShader.setMat4("projection", projection);
-		ourShader.setVec3("cameraPos", camera.Position);
+		normalShader.use();
+		normalShader.setMat4("projection", projection);
+		normalShader.setMat4("view", view);
+		normalShader.setMat4("model", model);
 
-		// add time component to geometry shader in the form of a uniform
-		ourShader.setFloat("time", static_cast<float>(glfwGetTime()));
+		ourModel.Draw(normalShader);
 
 		// draw skybox as last
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -289,7 +286,7 @@ int main() {
         glBindVertexArray(quadVAO);
         glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// use the color attachment texture as the texture of the quad plane
         glDrawArrays(GL_TRIANGLES, 0, 6);
-
+		
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(window);
 		glfwPollEvents();

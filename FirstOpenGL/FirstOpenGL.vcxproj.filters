@@ -70,7 +70,13 @@
     <None Include="shaders\screen.fs">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="shaders\shader.gs">
+    <None Include="shaders\normal.vs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="shaders\normal.fs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="shaders\normal.gs">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
