@@ -138,6 +138,8 @@
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\screen.fs" />
+    <None Include="shaders\screen.vs" />
     <None Include="shaders\shader.fs" />
     <None Include="shaders\shader.vs" />
     <None Include="shaders\skybox.fs" />
