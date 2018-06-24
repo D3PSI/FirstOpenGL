@@ -141,8 +141,6 @@
     <None Include="shaders\screen.vs" />
     <None Include="shaders\shader.fs" />
     <None Include="shaders\shader.vs" />
-    <None Include="shaders\skybox.fs" />
-    <None Include="shaders\skybox.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -55,12 +55,6 @@
     <None Include="shaders\shader.vs">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="shaders\skybox.vs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="shaders\skybox.fs">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="shaders\screen.vs">
       <Filter>Source Files</Filter>
     </None>

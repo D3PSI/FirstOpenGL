@@ -26,6 +26,8 @@ unsigned int loadCubemap(vector<std::string> faces);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+bool blinn = false;
+bool blinnKeyPressed = false;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -38,7 +40,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 lightPos(0.7f, 0.2f, 2.0f);
+glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
 int main() {
 	// glfw: initialize and configure
@@ -84,51 +86,6 @@ int main() {
 	is correct.
 	*/
 
-	float skyboxVertices[] = {
-		// positions          
-	   -1.0f,  1.0f, -1.0f,
-	   -1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f,  1.0f, -1.0f,
-	   -1.0f,  1.0f, -1.0f,
-
-	   -1.0f, -1.0f,  1.0f,
-	   -1.0f, -1.0f, -1.0f,
-	   -1.0f,  1.0f, -1.0f,
-	   -1.0f,  1.0f, -1.0f,
-	   -1.0f,  1.0f,  1.0f,
-	   -1.0f, -1.0f,  1.0f,
-
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-
-	   -1.0f, -1.0f,  1.0f,
-	   -1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f, -1.0f,  1.0f,
-	   -1.0f, -1.0f,  1.0f,
-
-	   -1.0f,  1.0f, -1.0f,
-		1.0f,  1.0f, -1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-	   -1.0f,  1.0f,  1.0f,
-	   -1.0f,  1.0f, -1.0f,
-
-	   -1.0f, -1.0f, -1.0f,
-	   -1.0f, -1.0f,  1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-	   -1.0f, -1.0f,  1.0f,
-		1.0f, -1.0f,  1.0f
-	};
-
 	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 		// positions   // texCoords
 	   -1.0f,  1.0f,  0.0f, 1.0f,
@@ -138,6 +95,18 @@ int main() {
 	   -1.0f,  1.0f,  0.0f, 1.0f,
 		1.0f, -1.0f,  1.0f, 0.0f,
 		1.0f,  1.0f,  1.0f, 1.0f
+	};
+
+	// plane vertex data
+	float planeVertices[] = {
+		// positions            // normals         // texcoords
+		10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
+	   -10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
+	   -10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,   0.0f, 10.0f,
+
+		10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
+	   -10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,   0.0f, 10.0f,
+		10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,  10.0f, 10.0f
 	};
 
 	// configure MSAA framebuffer
@@ -183,16 +152,6 @@ int main() {
 		std::cerr << "ERROR::FRAMEBUFFER:: Intermediate framebuffer is not complete!" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// skybox VAO
-	unsigned int skyboxVAO, skyboxVBO;
-	glGenVertexArrays(1, &skyboxVAO);
-	glGenBuffers(1, &skyboxVBO);
-	glBindVertexArray(skyboxVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
 	// screen quad VAO
 	unsigned int quadVAO, quadVBO;
 	glGenVertexArrays(1, &quadVAO);
@@ -205,35 +164,37 @@ int main() {
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
-	vector<std::string> faces {
-		"resources/textures/skyboxes/skybox/right.jpg",
-		"resources/textures/skyboxes/skybox/left.jpg",
-		"resources/textures/skyboxes/skybox/top.jpg",
-		"resources/textures/skyboxes/skybox/bottom.jpg",
-		"resources/textures/skyboxes/skybox/front.jpg",
-		"resources/textures/skyboxes/skybox/back.jpg"
-	};
-
-	unsigned int cubemapTexture = loadCubemap(faces);
+	// plane VAO
+	unsigned int planeVAO, planeVBO;
+	glGenVertexArrays(1, &planeVAO);
+	glGenBuffers(1, &planeVBO);
+	glBindVertexArray(planeVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glBindVertexArray(0);
 
 	Shader ourShader("shaders/shader.vs", "shaders/shader.fs");
-	Shader skyboxShader("shaders/skybox.vs", "shaders/skybox.fs");
 	Shader screenShader("shaders/screen.vs", "shaders/screen.fs");
 
-	Model ourModel("resources/models/nanosuit/nanosuit.obj");
+	unsigned int floorTexture = loadTexture("resources/textures/textures/wood.png");
 
 	// shader configuration
 	ourShader.use();
-	ourShader.setInt("texture_diffuse1", 0);
-
-	skyboxShader.use();
-	skyboxShader.setInt("skybox", 0);
+	ourShader.setInt("texture1", 0);
 
 	screenShader.use();
 	screenShader.setInt("screenTexture", 0);
 
-	// enable depth testing
+	// configure OpenGL state
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// wireframe mode (uncomment, but you wont be able to see anything because its's all being drawn to a simple texture in our personal framebuffer object)
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -260,35 +221,25 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 
+		// draw objects
 		ourShader.use();
-
-		// view/projection transformations
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 		ourShader.setMat4("projection", projection);
 		ourShader.setMat4("view", view);
 
-		// render the loaded model
-		glm::mat4 model;
-		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
-		ourShader.setMat4("model", model);
-		ourModel.Draw(ourShader);
+		// set light uniforms
+		ourShader.setVec3("viewPos", camera.Position);
+		ourShader.setVec3("lightPos", lightPos);
+		ourShader.setInt("blinn", blinn);
 
-		// draw skybox as last
-		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
-		skyboxShader.use();
-		view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
-		skyboxShader.setMat4("view", view);
-		skyboxShader.setMat4("projection", projection);
-
-		// skybox cube
-		glBindVertexArray(skyboxVAO);
+		// floor
+		glBindVertexArray(planeVAO);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-		glDepthFunc(GL_LESS); // set depth function back to default
+		glBindTexture(GL_TEXTURE_2D, floorTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		std::cout << (blinn ? "Blinn-Phong" : "Phong") << std::endl;
 		
 		 // 2. now blit multisampled buffer(s) to normal colorbuffer of intermediate FBO. Image is stored in screenTexture
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
@@ -310,6 +261,9 @@ int main() {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	glDeleteVertexArrays(1, &planeVAO);
+	glDeleteBuffers(1, &planeVBO);
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	glfwTerminate();
@@ -337,6 +291,15 @@ void processInput(GLFWwindow *window) {
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+
+	// switch from phong to blinn-phong lighing with letter b
+	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS && !blinnKeyPressed) {
+		blinn = !blinn;
+		blinnKeyPressed = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_RELEASE) {
+		blinnKeyPressed = false;
+	}
 }
 
 void mouse_callback(GLFWwindow * window, double xpos, double ypos) {
