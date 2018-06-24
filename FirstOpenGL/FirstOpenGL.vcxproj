@@ -138,9 +138,6 @@
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\normal.fs" />
-    <None Include="shaders\normal.gs" />
-    <None Include="shaders\normal.vs" />
     <None Include="shaders\screen.fs" />
     <None Include="shaders\screen.vs" />
     <None Include="shaders\shader.fs" />

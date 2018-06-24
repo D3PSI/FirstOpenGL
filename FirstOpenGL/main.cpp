@@ -135,30 +135,47 @@ int main() {
 		1.0f,  1.0f,  1.0f, 1.0f
 	};
 
-	// framebuffer configuration
+	// configure MSAA framebuffer
 	unsigned int framebuffer;
 	glGenFramebuffers(1, &framebuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
-	// create a color attachment texture
-	unsigned int textureColorbuffer;
-	glGenTextures(1, &textureColorbuffer);
-	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+	// create a multisampled color attachment texture
+	unsigned int textureColorBufferMultiSampled;
+	glGenTextures(1, &textureColorBufferMultiSampled);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, SCR_WIDTH, SCR_HEIGHT, GL_TRUE);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled, 0);
 
-	// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+	// create a (also multisampled) renderbuffer object for depth and stencil attachments
 	unsigned int rbo;
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT); // use a single renderbuffer object for both a depth AND stencil buffer.
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
-		
-	// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cerr << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// configure second post-processing framebuffer
+	unsigned int intermediateFBO;
+	glGenFramebuffers(1, &intermediateFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, intermediateFBO);
+
+	// create a color attachment texture
+	unsigned int screenTexture;
+	glGenTextures(1, &screenTexture);
+	glBindTexture(GL_TEXTURE_2D, screenTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTexture, 0);	// we only need a color buffer
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cerr << "ERROR::FRAMEBUFFER:: Intermediate framebuffer is not complete!" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// skybox VAO
@@ -195,7 +212,6 @@ int main() {
 	unsigned int cubemapTexture = loadCubemap(faces);
 
 	Shader ourShader("shaders/shader.vs", "shaders/shader.fs");
-	Shader normalShader("shaders/normal.vs", "shaders/normal.fs", "shaders/normal.gs");
 	Shader skyboxShader("shaders/skybox.vs", "shaders/skybox.fs");
 	Shader screenShader("shaders/screen.vs", "shaders/screen.fs");
 
@@ -230,13 +246,14 @@ int main() {
 		// input
 		processInput(window);
 
-		// bind to framebuffer and draw scene as we normally would to color texture 
-		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-		glEnable(GL_DEPTH_TEST);
-
-		// render
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// 1. draw scene as normal in multisampled buffers
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
 
 		ourShader.use();
 
@@ -249,15 +266,9 @@ int main() {
 		// render the loaded model
 		glm::mat4 model;
 		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
 		ourShader.setMat4("model", model);
 		ourModel.Draw(ourShader);
-
-		normalShader.use();
-		normalShader.setMat4("projection", projection);
-		normalShader.setMat4("view", view);
-		normalShader.setMat4("model", model);
-
-		ourModel.Draw(normalShader);
 
 		// draw skybox as last
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -274,17 +285,20 @@ int main() {
 		glBindVertexArray(0);
 		glDepthFunc(GL_LESS); // set depth function back to default
 		
-		// now bind back to default framebuffer and draw a quad plane with the attached framebuffer color texture
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
+		 // 2. now blit multisampled buffer(s) to normal colorbuffer of intermediate FBO. Image is stored in screenTexture
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFBO);
+		glBlitFramebuffer(0, 0, SCR_WIDTH, SCR_HEIGHT, 0, 0, SCR_WIDTH, SCR_HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-        // clear all relevant buffers
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
-        glClear(GL_COLOR_BUFFER_BIT);
+		// 3. now render quad with scene's visuals as its texture image
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glDisable(GL_DEPTH_TEST);
 
         screenShader.use();
         glBindVertexArray(quadVAO);
-        glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// use the color attachment texture as the texture of the quad plane
+        glBindTexture(GL_TEXTURE_2D, intermediateFBO);	// use the color attachment texture as the texture of the quad plane
         glDrawArrays(GL_TRIANGLES, 0, 6);
 		
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
