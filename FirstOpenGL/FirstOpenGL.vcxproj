@@ -134,7 +134,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="prototypes.h" />
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
