@@ -49,16 +49,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\shader.fs">
+    <None Include="shaders\screen.frag">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="shaders\shader.vs">
+    <None Include="shaders\screen.vert">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="shaders\screen.vs">
+    <None Include="shaders\shader.frag">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="shaders\screen.fs">
+    <None Include="shaders\shader.vert">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

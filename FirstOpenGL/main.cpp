@@ -179,8 +179,8 @@ int main() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glBindVertexArray(0);
 
-	Shader shader("shaders/shader.vs", "shaders/shader.fs");
-	Shader screenShader("shaders/screen.vs", "shaders/screen.fs");
+	Shader shader("shaders/shader.vert", "shaders/shader.frag");
+	Shader screenShader("shaders/screen.vert", "shaders/screen.frag");
 
 	unsigned int floorTexture				= loadTexture("resources/textures/textures/wood.png", false);
 	unsigned int floorTextureGammaCorrected = loadTexture("resources/textures/textures/wood.png", true);
