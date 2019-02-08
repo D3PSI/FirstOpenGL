@@ -79,7 +79,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)/../External Resources/assimp/include;$(SolutionDir)/../External Resources/glm;$(SolutionDir)/../External Resources/stbimage/include;$(SolutionDir)/../External Resources/GLFW/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)/../External Resources/stbimage/include;$(SolutionDir)/../External Resources/assimp/lib;$(SolutionDir)/../External Resources/GLFW/lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/../External Resources/assimp/lib;$(SolutionDir)/../External Resources/GLFW/lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
